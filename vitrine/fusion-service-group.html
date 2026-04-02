@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusion Service Group – Digital & Commerce International</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #F5A623;
+    --gold-light: #FFD166;
+    --gold-dark: #C07D0A;
+    --black: #080808;
+    --dark: #0F0F0F;
+    --dark2: #161616;
+    --dark3: #1E1E1E;
+    --white: #F5F5F0;
+    --gray: #999;
+    --red: #E63946;
+    --cyan: #06D6A0;
+    --blue: #118AB2;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-follower {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+    opacity: 0.5;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9997; opacity: 0.5;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 20px 6%;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(245,166,35,0.1);
+    transition: all 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.97);
+    border-bottom-color: rgba(245,166,35,0.2);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.4rem;
+    color: var(--white); text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo span { color: var(--gold); }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800; color: var(--black);
+    animation: pulse-logo 3s ease-in-out infinite;
+  }
+  @keyframes pulse-logo {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(245,166,35,0); }
+  }
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+  }
+  .nav-links a {
+    color: rgba(245,245,240,0.7); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav-cta {
+    background: var(--gold); color: var(--black);
+    padding: 10px 24px; border-radius: 2px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.8rem; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .nav-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--white);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .nav-cta:hover::before { transform: translateX(0); }
+  .nav-cta span { position: relative; z-index: 1; }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; }
+  .nav-hamburger span { width: 26px; height: 2px; background: var(--white); transition: all 0.3s; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 120px 6% 80px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,166,35,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 20%, rgba(6,214,160,0.05) 0%, transparent 60%),
+                var(--black);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-drift 20s linear infinite;
+  }
+  @keyframes grid-drift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; max-width: 900px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3);
+    color: var(--gold); padding: 6px 18px; border-radius: 40px;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 30px;
+    animation: fadeInDown 0.8s ease 0.2s both;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; background: var(--gold);
+    border-radius: 50%;
+    animation: blink 1.5s ease infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 800; line-height: 1.0;
+    letter-spacing: -0.03em;
+    animation: fadeInUp 0.9s ease 0.4s both;
+    margin-bottom: 28px;
+  }
+  .hero-title .line1 { display: block; color: var(--white); }
+  .hero-title .line2 {
+    display: block; 
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(245,245,240,0.6); line-height: 1.7;
+    max-width: 600px; margin: 0 auto 48px;
+    font-weight: 300;
+    animation: fadeInUp 0.9s ease 0.6s both;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    animation: fadeInUp 0.9s ease 0.8s both;
+  }
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 36px; border-radius: 3px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0 0 0 rgba(245,166,35,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(245,166,35,0.25);
+  }
+  .btn-secondary {
+    background: transparent; color: var(--white);
+    padding: 16px 36px; border-radius: 3px;
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s;
+    border: 1px solid rgba(245,245,240,0.2);
+  }
+  .btn-secondary:hover {
+    border-color: var(--gold); color: var(--gold);
+    transform: translateY(-3px);
+  }
+  .hero-stats {
+    position: relative; z-index: 2;
+    display: flex; gap: 60px; justify-content: center;
+    margin-top: 80px; padding-top: 40px;
+    border-top: 1px solid rgba(245,245,240,0.06);
+    animation: fadeInUp 0.9s ease 1s both;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem; font-weight: 800; color: var(--gold);
+    display: block; line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; }
+
+  /* SCROLL INDICATOR */
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: fadeIn 1s ease 1.5s both;
+    cursor: none;
+  }
+  .scroll-indicator span { font-size: 0.7rem; color: var(--gray); letter-spacing: 0.15em; text-transform: uppercase; }
+  .scroll-line {
+    width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scroll-line 2s ease infinite;
+  }
+  @keyframes scroll-line {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* FLOATING ELEMENTS */
+  .float-elem {
+    position: absolute; border-radius: 50%;
+    filter: blur(60px); pointer-events: none;
+    animation: float-slow 8s ease-in-out infinite;
+  }
+  .float-1 { width: 300px; height: 300px; background: rgba(245,166,35,0.07); top: 20%; right: 5%; animation-delay: 0s; }
+  .float-2 { width: 200px; height: 200px; background: rgba(6,214,160,0.05); bottom: 20%; left: 5%; animation-delay: 3s; }
+  .float-3 { width: 150px; height: 150px; background: rgba(17,138,178,0.06); top: 50%; right: 25%; animation-delay: 5s; }
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* SECTIONS COMMON */
+  section { padding: 100px 6%; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .section-label::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800; line-height: 1.15;
+    letter-spacing: -0.02em; margin-bottom: 20px;
+  }
+  .section-title em { color: var(--gold); font-style: normal; }
+  .section-desc {
+    color: rgba(245,245,240,0.55); line-height: 1.8;
+    max-width: 560px; font-size: 1rem; font-weight: 300;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    padding: 0; overflow: hidden;
+    background: var(--gold);
+    border-top: none; border-bottom: none;
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  .marquee-item {
+    display: flex; align-items: center; gap: 20px;
+    padding: 14px 40px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; color: var(--black);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .marquee-dot { width: 6px; height: 6px; background: var(--black); border-radius: 50%; opacity: 0.4; }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* SERVICES */
+  #services { background: var(--dark); }
+  .services-intro { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 70px; }
+  .services-intro-right { max-width: 400px; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--dark2);
+    padding: 40px 36px;
+    position: relative; overflow: hidden;
+    transition: all 0.4s;
+    cursor: none;
+    border: 1px solid transparent;
+  }
+  .service-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(245,166,35,0.05) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .service-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .service-card:hover { background: var(--dark3); border-color: rgba(245,166,35,0.12); transform: translateY(-4px); }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-card.featured {
+    background: linear-gradient(135deg, rgba(245,166,35,0.12) 0%, var(--dark2) 60%);
+    border-color: rgba(245,166,35,0.2);
+    grid-column: span 1;
+  }
+  .service-icon {
+    width: 52px; height: 52px;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 24px;
+    transition: all 0.4s;
+  }
+  .service-card:hover .service-icon {
+    background: rgba(245,166,35,0.2);
+    transform: scale(1.1) rotate(5deg);
+  }
+  .service-tag {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 12px; display: block;
+  }
+  .service-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem; font-weight: 700;
+    margin-bottom: 14px; line-height: 1.3;
+  }
+  .service-desc {
+    font-size: 0.88rem; color: rgba(245,245,240,0.5);
+    line-height: 1.7; font-weight: 300;
+    margin-bottom: 24px;
+  }
+  .service-price {
+    font-family: 'Syne', sans-serif; font-size: 1.5rem;
+    font-weight: 800; color: var(--gold);
+  }
+  .service-price small { font-size: 0.65rem; color: var(--gray); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+  .service-arrow {
+    position: absolute; right: 28px; bottom: 28px;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(245,245,240,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; color: var(--gray);
+    transition: all 0.3s;
+  }
+  .service-card:hover .service-arrow {
+    background: var(--gold); border-color: var(--gold); color: var(--black);
+  }
+
+  /* FORMATIONS */
+  #formations { background: var(--black); }
+  .formations-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
+  .formations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .formation-card {
+    background: var(--dark2);
+    border-radius: 4px; overflow: hidden;
+    position: relative; transition: transform 0.4s;
+    cursor: none;
+    border: 1px solid rgba(245,245,240,0.04);
+  }
+  .formation-card:hover { transform: translateY(-8px); }
+  .formation-card:hover .formation-img { transform: scale(1.08); }
+  .formation-header-bar {
+    height: 5px;
+  }
+  .fc-gold { background: var(--gold); }
+  .fc-cyan { background: var(--cyan); }
+  .fc-blue { background: var(--blue); }
+  .fc-red { background: var(--red); }
+  .formation-body { padding: 30px; }
+  .formation-level {
+    display: inline-block;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .level-debut { background: rgba(6,214,160,0.1); color: var(--cyan); }
+  .level-avance { background: rgba(245,166,35,0.1); color: var(--gold); }
+  .level-expert { background: rgba(230,57,70,0.1); color: var(--red); }
+  .formation-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1.2rem; margin-bottom: 12px; line-height: 1.3;
+  }
+  .formation-topics {
+    list-style: none; margin-bottom: 24px;
+  }
+  .formation-topics li {
+    font-size: 0.83rem; color: rgba(245,245,240,0.55);
+    padding: 5px 0; padding-left: 16px; position: relative;
+    font-weight: 300;
+  }
+  .formation-topics li::before {
+    content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 0.7rem;
+  }
+  .formation-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 20px; border-top: 1px solid rgba(245,245,240,0.06);
+  }
+  .formation-price {
+    font-family: 'Syne', sans-serif; font-size: 1.4rem;
+    font-weight: 800; color: var(--gold);
+  }
+  .btn-enroll {
+    background: var(--gold); color: var(--black);
+    padding: 8px 20px; border-radius: 2px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s;
+  }
+  .btn-enroll:hover { background: var(--white); transform: scale(1.05); }
+
+  /* IMPORTATION */
+  #importation { background: var(--dark); }
+  .import-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .import-visual {
+    position: relative; height: 500px;
+  }
+  .globe-container {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .globe {
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 35% 35%, rgba(245,166,35,0.15) 0%, transparent 60%),
+                linear-gradient(135deg, rgba(245,166,35,0.05), rgba(6,214,160,0.05));
+    border: 1px solid rgba(245,166,35,0.2);
+    position: relative;
+    animation: globe-spin 20s linear infinite;
+  }
+  .globe::before {
+    content: '🌐'; position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8rem; filter: grayscale(1) opacity(0.15);
+  }
+  @keyframes globe-spin {
+    0% { box-shadow: 0 0 0 0 rgba(245,166,35,0.1), 0 0 60px rgba(245,166,35,0.05); }
+    50% { box-shadow: 0 0 0 30px rgba(245,166,35,0), 0 0 80px rgba(245,166,35,0.08); }
+    100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.1), 0 0 60px rgba(245,166,35,0.05); }
+  }
+  .import-country {
+    position: absolute;
+    background: var(--dark2); border: 1px solid rgba(245,166,35,0.2);
+    padding: 12px 20px; border-radius: 4px;
+    display: flex; align-items: center; gap: 12px;
+    animation: float-slow 6s ease-in-out infinite;
+  }
+  .import-country:nth-child(2) { top: 10%; left: 0; animation-delay: 0s; }
+  .import-country:nth-child(3) { top: 40%; right: 0; animation-delay: 2s; }
+  .import-country:nth-child(4) { bottom: 10%; left: 10%; animation-delay: 4s; }
+  .import-flag { font-size: 1.6rem; }
+  .import-country-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+  .import-country-sub { font-size: 0.72rem; color: var(--gray); }
+  .import-features { display: flex; flex-direction: column; gap: 20px; }
+  .import-feature {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 24px; background: var(--dark2); border-radius: 4px;
+    border-left: 3px solid var(--gold); transition: all 0.3s;
+    cursor: none;
+  }
+  .import-feature:hover { background: var(--dark3); transform: translateX(8px); }
+  .import-feature-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .import-feature h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 6px; }
+  .import-feature p { font-size: 0.85rem; color: rgba(245,245,240,0.5); line-height: 1.6; font-weight: 300; }
+
+  /* PRICING TABLE */
+  .price-tables { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 50px; }
+  .price-table {
+    background: var(--dark3); border-radius: 4px;
+    overflow: hidden; border: 1px solid rgba(245,245,240,0.05);
+    transition: all 0.3s;
+  }
+  .price-table:hover { border-color: rgba(245,166,35,0.2); transform: translateY(-6px); }
+  .price-table-header {
+    padding: 24px; display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid rgba(245,245,240,0.06);
+  }
+  .price-table-header .flag { font-size: 2rem; }
+  .price-table-header h3 { font-family: 'Syne', sans-serif; font-weight: 700; }
+  .price-table-header small { font-size: 0.72rem; color: var(--gray); }
+  .price-table-body { padding: 24px; }
+  .price-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid rgba(245,245,240,0.04);
+    font-size: 0.88rem;
+  }
+  .price-row:last-child { border-bottom: none; }
+  .price-row .label { color: rgba(245,245,240,0.6); }
+  .price-row .value { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--gold); }
+
+  /* WHY US */
+  #pourquoi { background: var(--black); }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 60px; }
+  .why-item {
+    background: var(--dark2); padding: 50px 44px;
+    position: relative; overflow: hidden;
+    cursor: none; transition: all 0.4s;
+    border: 1px solid transparent;
+  }
+  .why-item:hover { border-color: rgba(245,166,35,0.1); }
+  .why-item::before {
+    content: attr(data-num);
+    position: absolute; right: 30px; top: 20px;
+    font-family: 'Syne', sans-serif; font-size: 5rem;
+    font-weight: 800; color: rgba(245,166,35,0.04);
+    line-height: 1;
+    transition: color 0.4s;
+  }
+  .why-item:hover::before { color: rgba(245,166,35,0.08); }
+  .why-item-icon { font-size: 2.2rem; margin-bottom: 20px; }
+  .why-item h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 14px; }
+  .why-item p { font-size: 0.88rem; color: rgba(245,245,240,0.5); line-height: 1.7; font-weight: 300; }
+  .why-item.highlight-card {
+    background: linear-gradient(135deg, rgba(245,166,35,0.12), var(--dark2));
+    border-color: rgba(245,166,35,0.15);
+  }
+
+  /* TESTIMONIALS */
+  #temoignages { background: var(--dark); overflow: hidden; }
+  .testi-header { text-align: center; margin-bottom: 60px; }
+  .testi-header .section-label { justify-content: center; }
+  .testi-header .section-title { text-align: center; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card {
+    background: var(--dark2); padding: 36px;
+    border-radius: 4px; position: relative;
+    border: 1px solid rgba(245,245,240,0.04);
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .testi-card:hover { border-color: rgba(245,166,35,0.15); transform: translateY(-6px); }
+  .testi-quote { font-size: 2rem; color: var(--gold); line-height: 1; margin-bottom: 20px; opacity: 0.5; }
+  .testi-text {
+    font-size: 0.92rem; color: rgba(245,245,240,0.7);
+    line-height: 1.8; margin-bottom: 28px; font-style: italic; font-weight: 300;
+  }
+  .testi-author { display: flex; align-items: center; gap: 14px; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 0.9rem; color: var(--black); flex-shrink: 0;
+  }
+  .testi-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+  .testi-role { font-size: 0.75rem; color: var(--gray); }
+  .testi-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 4px; }
+
+  /* CTA SECTION */
+  #cta {
+    background: var(--gold);
+    padding: 100px 6%;
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(0,0,0,0.03) 20px,
+      rgba(0,0,0,0.03) 40px
+    );
+  }
+  .cta-content {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 40px;
+  }
+  .cta-text { max-width: 600px; }
+  .cta-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(8,8,8,0.5);
+    margin-bottom: 16px; display: block;
+  }
+  .cta-title {
+    font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; color: var(--black); line-height: 1.15;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .cta-sub { color: rgba(8,8,8,0.65); font-size: 1rem; line-height: 1.6; font-weight: 300; }
+  .cta-actions { display: flex; flex-direction: column; gap: 14px; align-items: flex-end; }
+  .btn-dark {
+    background: var(--black); color: var(--gold);
+    padding: 16px 36px; border-radius: 3px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s; white-space: nowrap;
+  }
+  .btn-dark:hover { background: var(--dark3); transform: scale(1.04); }
+  .btn-outline-dark {
+    background: transparent; color: var(--black);
+    padding: 14px 36px; border-radius: 3px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.3s; white-space: nowrap;
+    border: 2px solid rgba(8,8,8,0.3);
+  }
+  .btn-outline-dark:hover { border-color: var(--black); background: rgba(8,8,8,0.08); }
+
+  /* CONTACT */
+  #contact { background: var(--black); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .contact-info { }
+  .contact-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 24px 0; border-bottom: 1px solid rgba(245,245,240,0.06);
+  }
+  .contact-item:first-of-type { padding-top: 0; }
+  .contact-icon {
+    width: 44px; height: 44px; background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-item h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
+  .contact-item p, .contact-item a {
+    font-size: 0.88rem; color: rgba(245,245,240,0.6);
+    text-decoration: none; line-height: 1.6; font-weight: 300;
+    transition: color 0.3s;
+  }
+  .contact-item a:hover { color: var(--gold); }
+  .contact-form { }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(245,245,240,0.5); margin-bottom: 8px;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: var(--dark2);
+    border: 1px solid rgba(245,245,240,0.08);
+    padding: 14px 18px; border-radius: 3px;
+    color: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; transition: all 0.3s;
+    outline: none; resize: none;
+    cursor: none;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: rgba(245,166,35,0.4);
+    background: var(--dark3);
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.06);
+  }
+  .form-group select option { background: var(--dark2); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .btn-submit {
+    width: 100%; background: var(--gold); color: var(--black);
+    padding: 16px; border-radius: 3px; border: none;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: none; transition: all 0.3s;
+  }
+  .btn-submit:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 16px 32px rgba(245,166,35,0.2); }
+
+  /* PARTNERS */
+  #partenaires { background: var(--dark); padding: 60px 6%; }
+  .partners-header { text-align: center; margin-bottom: 50px; }
+  .partners-row {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  }
+  .partner-badge {
+    background: var(--dark2); border: 1px solid rgba(245,245,240,0.06);
+    padding: 16px 28px; border-radius: 4px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; color: rgba(245,245,240,0.4);
+    transition: all 0.3s; cursor: none;
+  }
+  .partner-badge:hover { border-color: rgba(245,166,35,0.2); color: var(--gold); transform: translateY(-4px); }
+
+  /* FOOTER */
+  footer {
+    background: #040404; padding: 60px 6% 30px;
+    border-top: 1px solid rgba(245,245,240,0.05);
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 50px; }
+  .footer-brand .nav-logo { margin-bottom: 16px; display: inline-flex; }
+  .footer-desc { font-size: 0.85rem; color: rgba(245,245,240,0.4); line-height: 1.8; margin-bottom: 24px; font-weight: 300; }
+  .footer-socials { display: flex; gap: 10px; }
+  .social-btn {
+    width: 38px; height: 38px;
+    background: var(--dark2); border: 1px solid rgba(245,245,240,0.06);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; text-decoration: none; color: var(--gray);
+    transition: all 0.3s; cursor: none;
+  }
+  .social-btn:hover { background: var(--gold); color: var(--black); border-color: var(--gold); transform: translateY(-4px); }
+  .footer-col h4 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem;
+    margin-bottom: 20px; color: var(--white);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    font-size: 0.83rem; color: rgba(245,245,240,0.4);
+    text-decoration: none; transition: color 0.3s; font-weight: 300;
+  }
+  .footer-col ul li a:hover { color: var(--gold); }
+  .footer-bottom {
+    padding-top: 28px; border-top: 1px solid rgba(245,245,240,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(245,245,240,0.25); font-weight: 300; }
+  .footer-bottom span { color: var(--gold); }
+  .rccm { font-size: 0.7rem; color: rgba(245,245,240,0.2); font-family: monospace; }
+
+  /* ANIMATIONS */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* REVEAL ON SCROLL */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* MOBILE NAV */
+  .mobile-menu {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(8,8,8,0.97); flex-direction: column;
+    align-items: center; justify-content: center; gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-close {
+    position: absolute; top: 24px; right: 6%;
+    font-size: 2rem; color: var(--white); background: none;
+    border: none; cursor: none;
+  }
+
+  /* WHATSAPP FLOAT */
+  .wa-float {
+    position: fixed; bottom: 32px; right: 32px; z-index: 500;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; text-decoration: none;
+    box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+    animation: wa-bounce 3s ease infinite;
+    cursor: none;
+    transition: transform 0.3s;
+  }
+  .wa-float:hover { transform: scale(1.15); }
+  @keyframes wa-bounce {
+    0%, 100% { box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
+    50% { box-shadow: 0 12px 40px rgba(37,211,102,0.5); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .formations-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links, .nav-cta { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero-stats { gap: 30px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .formations-grid { grid-template-columns: 1fr; }
+    .import-layout { grid-template-columns: 1fr; }
+    .import-visual { height: 300px; }
+    .price-tables { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .cta-content { flex-direction: column; text-align: center; }
+    .cta-actions { align-items: center; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .services-intro, .formations-header { flex-direction: column; gap: 20px; }
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(245,166,35,0.2), transparent);
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">FSG</div>
+    Fusion <span>Service</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#formations">Formations</a></li>
+    <li><a href="#importation">Importation</a></li>
+    <li><a href="#pourquoi">Pourquoi nous</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta"><span>Commencer →</span></a>
+  <div class="nav-hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#formations" onclick="closeMobile()">Formations</a>
+  <a href="#importation" onclick="closeMobile()">Importation</a>
+  <a href="#pourquoi" onclick="closeMobile()">Pourquoi nous</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="float-elem float-1"></div>
+  <div class="float-elem float-2"></div>
+  <div class="float-elem float-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">🌍 Afrique · Europe · Amérique</div>
+    <h1 class="hero-title">
+      <span class="line1">Votre Business,</span>
+      <span class="line2">Sans Frontières.</span>
+    </h1>
+    <p class="hero-sub">
+      Fusion Service Group vous connecte aux opportunités du commerce international et du digital. Formez-vous, importez, vendez en ligne — tout en un seul endroit.
+    </p>
+    <div class="hero-actions">
+      <a href="#formations" class="btn-primary">Découvrir nos formations</a>
+      <a href="#services" class="btn-secondary">Nos services</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num" data-target="3">0</span>
+      <span class="stat-label">Pays partenaires</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="9">0</span>
+      <span class="stat-label">Formations disponibles</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="500">0</span>
+      <span class="stat-label">Clients accompagnés</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="100">0</span>
+      <span class="stat-label">% Satisfaction</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item">Import Chine <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Marketing Digital <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Formation Business <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Commerce International <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Import Nigeria <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Publicité Facebook & TikTok <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Import Dubaï <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Community Management <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Transport Express <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Agence Voyage Business <span class="marquee-dot"></span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item">Import Chine <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Marketing Digital <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Formation Business <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Commerce International <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Import Nigeria <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Publicité Facebook & TikTok <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Import Dubaï <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Community Management <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Transport Express <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Agence Voyage Business <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-intro">
+    <div>
+      <div class="section-label reveal">Nos Services</div>
+      <h2 class="section-title reveal reveal-delay-1">Tout ce dont votre<br>business a besoin</h2>
+    </div>
+    <div class="services-intro-right reveal reveal-delay-2">
+      <p class="section-desc">Des services complets pensés pour les entrepreneurs africains qui veulent aller plus loin — en ligne et à l'international.</p>
+    </div>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card featured reveal">
+      <div class="service-icon">🌐</div>
+      <span class="service-tag">Groupe Commande</span>
+      <div class="service-name">Importation Groupée</div>
+      <div class="service-desc">Commandez depuis la Chine, le Nigeria ou Dubaï sans vous déplacer. Vérification qualité incluse.</div>
+      <div class="service-price">Dès <b>10 500F</b><small> / commande</small></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">✅</div>
+      <span class="service-tag">Contrôle Qualité</span>
+      <div class="service-name">Vérification Marchandise</div>
+      <div class="service-desc">Inspection de vos produits et fournisseurs sur place. Zéro mauvaise surprise à la livraison.</div>
+      <div class="service-price">Dès <b>2 000F</b><small> / vérification</small></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">✈️</div>
+      <span class="service-tag">Logistique</span>
+      <div class="service-name">Transport Express Dubaï → Afrique</div>
+      <div class="service-desc">Livraison rapide et sécurisée de Dubaï vers le Cameroun et toute l'Afrique.</div>
+      <div class="service-price"><b>10 000F</b><small>/Kg Cameroun</small></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📱</div>
+      <span class="service-tag">Digital</span>
+      <div class="service-name">Agence Marketing</div>
+      <div class="service-desc">Gestion de pages, audit, stratégies, campagnes Facebook & TikTok pour booster vos ventes.</div>
+      <div class="service-price">Dès <b>30 000F</b><small>/mois</small></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">🧳</div>
+      <span class="service-tag">Voyage</span>
+      <div class="service-name">Agence Voyage Business</div>
+      <div class="service-desc">Voyages d'affaires au Nigeria, Dubaï et Chine. Visa, billets, accompagnement terrain.</div>
+      <div class="service-price">Nigeria <b>500 000F</b></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">💰</div>
+      <span class="service-tag">Investissement</span>
+      <div class="service-name">Micro Business & FinTech</div>
+      <div class="service-desc">Investissez dans des micro-business rentables. Paiement fournisseurs & transferts d'argent en Afrique.</div>
+      <div class="service-price">Dès <b>25 000F</b></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🎨</div>
+      <span class="service-tag">Infographie</span>
+      <div class="service-name">Création Visuelle</div>
+      <div class="service-desc">Flyers, logos, roll-ups, banderoles. Tout pour votre identité visuelle professionnelle.</div>
+      <div class="service-price">Flyer <b>5 000F</b> · Logo <b>25 000F</b></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">📊</div>
+      <span class="service-tag">Fiscal</span>
+      <div class="service-name">Impôts & Déclarations</div>
+      <div class="service-desc">Déclarations fiscales, DSF et accompagnement administratif pour les entrepreneurs.</div>
+      <div class="service-price">Décla. <b>15 000F</b> · DSF <b>45 000F</b></div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">🏪</div>
+      <span class="service-tag">E-Commerce</span>
+      <div class="service-name">Boutique en Ligne Complète</div>
+      <div class="service-desc">Shopify, systèmes de vente, intégration TikTok & Facebook Shop pour vendre partout.</div>
+      <div class="service-price"><b>290 000F</b><small> complet</small></div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FORMATIONS -->
+<section id="formations">
+  <div class="formations-header">
+    <div>
+      <div class="section-label reveal">Formations</div>
+      <h2 class="section-title reveal reveal-delay-1">Apprenez les compétences<br>qui <em>rapportent</em> vraiment</h2>
+    </div>
+    <p class="section-desc reveal reveal-delay-2">Présentiel ou en ligne. Débutant ou confirmé. Nos formations sont conçues pour passer directement à l'action.</p>
+  </div>
+
+  <div class="formations-grid">
+    <div class="formation-card reveal">
+      <div class="formation-header-bar fc-gold"></div>
+      <div class="formation-body">
+        <span class="formation-level level-debut">Débutant</span>
+        <h3 class="formation-title">Importation en Ligne</h3>
+        <ul class="formation-topics">
+          <li>Importer depuis la Chine</li>
+          <li>Sourcing au Nigeria</li>
+          <li>Commandes depuis Dubaï</li>
+          <li>Éviter les arnaques fournisseurs</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">25 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">En ligne · Chine</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formation-card reveal reveal-delay-1">
+      <div class="formation-header-bar fc-blue"></div>
+      <div class="formation-body">
+        <span class="formation-level level-avance">Intermédiaire</span>
+        <h3 class="formation-title">Publicité Facebook & TikTok</h3>
+        <ul class="formation-topics">
+          <li>Gestionnaire de publicités Meta</li>
+          <li>Campagnes TikTok Ads</li>
+          <li>Ciblage & audiences avancées</li>
+          <li>8 séances intensives en ligne</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">50 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">Accès illimité · En ligne</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formation-card reveal reveal-delay-2">
+      <div class="formation-header-bar fc-cyan"></div>
+      <div class="formation-body">
+        <span class="formation-level level-avance">Intermédiaire</span>
+        <h3 class="formation-title">Community Management</h3>
+        <ul class="formation-topics">
+          <li>Gestion Facebook & Instagram</li>
+          <li>TikTok & WhatsApp Business</li>
+          <li>Créer & animer une communauté</li>
+          <li>Monétisation des réseaux</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">169 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">Complet · En ligne</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formation-card reveal">
+      <div class="formation-header-bar fc-red"></div>
+      <div class="formation-body">
+        <span class="formation-level level-expert">Expert</span>
+        <h3 class="formation-title">Marketing Digital Complet</h3>
+        <ul class="formation-topics">
+          <li>Facebook · Photoshop · Instagram</li>
+          <li>Alibaba · TikTok · Taobao</li>
+          <li>Stratégie de contenu & vente</li>
+          <li>Automatisation des campagnes</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">200 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">Complet · Présentiel + Ligne</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formation-card reveal reveal-delay-1">
+      <div class="formation-header-bar fc-gold"></div>
+      <div class="formation-body">
+        <span class="formation-level level-avance">Intermédiaire</span>
+        <h3 class="formation-title">Designer Graphique (3 mois)</h3>
+        <ul class="formation-topics">
+          <li>Photoshop complet</li>
+          <li>Illustrator professionnel</li>
+          <li>Flyers, logos, visuels marketing</li>
+          <li>Projets réels en cours</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">189 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">3 mois · Présentiel</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formation-card reveal reveal-delay-2">
+      <div class="formation-header-bar fc-cyan"></div>
+      <div class="formation-body">
+        <span class="formation-level level-expert">Expert</span>
+        <h3 class="formation-title">E-Commerce 3.0 — Système Complet</h3>
+        <ul class="formation-topics">
+          <li>Importation Chine intégrée</li>
+          <li>Shopify & You Can</li>
+          <li>Facebook Shop & TikTok Shop</li>
+          <li>Système de vente automatisé</li>
+        </ul>
+        <div class="formation-footer">
+          <div>
+            <div class="formation-price">290 000F</div>
+            <small style="color:var(--gray);font-size:0.72rem;">Complet · Présentiel + Ligne</small>
+          </div>
+          <a href="#contact" class="btn-enroll">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- IMPORTATION -->
+<section id="importation">
+  <div class="import-layout">
+    <div class="import-visual">
+      <div class="globe-container">
+        <div class="globe"></div>
+        <div class="import-country">
+          <span class="import-flag">🇨🇳</span>
+          <div>
+            <div class="import-country-name">Chine</div>
+            <div class="import-country-sub">Alibaba · Taobao · 1688</div>
+          </div>
+        </div>
+        <div class="import-country">
+          <span class="import-flag">🇦🇪</span>
+          <div>
+            <div class="import-country-name">Dubaï</div>
+            <div class="import-country-sub">Transport Express</div>
+          </div>
+        </div>
+        <div class="import-country">
+          <span class="import-flag">🇳🇬</span>
+          <div>
+            <div class="import-country-name">Nigeria</div>
+            <div class="import-country-sub">Alaba · Oshodi Market</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label reveal">Importation</div>
+      <h2 class="section-title reveal reveal-delay-1">Importez depuis<br><em>3 marchés</em> clés</h2>
+      <p class="section-desc reveal reveal-delay-2" style="margin-bottom:40px;">Nous vous connectons directement aux meilleurs fournisseurs de Chine, Nigeria et Dubaï. Vous achetez. Nous gérons le reste.</p>
+      <div class="import-features">
+        <div class="import-feature reveal reveal-delay-1">
+          <div class="import-feature-icon">📦</div>
+          <div>
+            <h4>Commande sans déplacement</h4>
+            <p>Commandez depuis chez vous. Nos agents sur place gèrent l'achat et la vérification à votre place.</p>
+          </div>
+        </div>
+        <div class="import-feature reveal reveal-delay-2">
+          <div class="import-feature-icon">🔍</div>
+          <div>
+            <h4>Vérification qualité garantie</h4>
+            <p>Chaque produit est inspecté avant expédition. Fournisseur testé, marchandise conforme.</p>
+          </div>
+        </div>
+        <div class="import-feature reveal reveal-delay-3">
+          <div class="import-feature-icon">🚚</div>
+          <div>
+            <h4>Livraison rapide en Afrique</h4>
+            <p>Transport express depuis Dubaï à 10 000F/Kg pour le Cameroun. Autres pays aussi disponibles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="price-tables">
+    <div class="price-table reveal">
+      <div class="price-table-header">
+        <span class="flag">🇨🇳</span>
+        <div><h3>Chine</h3><small>Alibaba · Taobao · 1688</small></div>
+      </div>
+      <div class="price-table-body">
+        <div class="price-row"><span class="label">Groupe commande</span><span class="value">Gratuit</span></div>
+        <div class="price-row"><span class="label">Importation présentielle</span><span class="value">50 000F</span></div>
+        <div class="price-row"><span class="label">Importation en ligne</span><span class="value">25 000F</span></div>
+        <div class="price-row"><span class="label">Vérification fournisseur</span><span class="value">dès 30 000F</span></div>
+      </div>
+    </div>
+    <div class="price-table reveal reveal-delay-1">
+      <div class="price-table-header">
+        <span class="flag">🇳🇬</span>
+        <div><h3>Nigeria</h3><small>Lagos · Alaba Market</small></div>
+      </div>
+      <div class="price-table-body">
+        <div class="price-row"><span class="label">Groupe commande</span><span class="value">10 500F</span></div>
+        <div class="price-row"><span class="label">Importation présentielle</span><span class="value">60 000F</span></div>
+        <div class="price-row"><span class="label">Importation en ligne</span><span class="value">50 000F</span></div>
+        <div class="price-row"><span class="label">Voyage business</span><span class="value">500 000F</span></div>
+      </div>
+    </div>
+    <div class="price-table reveal reveal-delay-2">
+      <div class="price-table-header">
+        <span class="flag">🇦🇪</span>
+        <div><h3>Dubaï</h3><small>Transport Express inclus</small></div>
+      </div>
+      <div class="price-table-body">
+        <div class="price-row"><span class="label">Groupe commande</span><span class="value">12 000F</span></div>
+        <div class="price-row"><span class="label">Importation présentielle</span><span class="value">50 000F</span></div>
+        <div class="price-row"><span class="label">Importation en ligne</span><span class="value">40 000F</span></div>
+        <div class="price-row"><span class="label">Transport Cameroun</span><span class="value">10 000F/Kg</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- POURQUOI -->
+<section id="pourquoi">
+  <div style="text-align:center; margin-bottom:60px;">
+    <div class="section-label reveal" style="justify-content:center;">Pourquoi nous choisir</div>
+    <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Une structure <em>complète</em><br>pour votre réussite</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-item reveal" data-num="01">
+      <div class="why-item-icon">🎯</div>
+      <h3>Tout en un seul endroit</h3>
+      <p>Formation, importation, marketing, logistique, fiscal. Vous n'avez plus besoin de chercher ailleurs. Fusion Service Group couvre tous vos besoins business.</p>
+    </div>
+    <div class="why-item highlight-card reveal reveal-delay-1" data-num="02">
+      <div class="why-item-icon">🌍</div>
+      <h3>Connecté à 3 marchés internationaux</h3>
+      <p>Chine, Nigeria, Dubaï. Des partenariats solides sur place pour vous donner accès aux meilleurs prix et aux meilleures opportunités.</p>
+    </div>
+    <div class="why-item reveal" data-num="03">
+      <div class="why-item-icon">📲</div>
+      <h3>Formation pour passer à l'action</h3>
+      <p>Nos formations ne sont pas théoriques. Elles sont conçues pour que vous génériez des revenus dès la fin du cours — même en partant de zéro.</p>
+    </div>
+    <div class="why-item reveal reveal-delay-1" data-num="04">
+      <div class="why-item-icon">🤝</div>
+      <h3>Accompagnement terrain réel</h3>
+      <p>Nos experts vous suivent pas à pas — que vous lanciez votre première importation ou votre première campagne publicitaire. Vous n'êtes jamais seul.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section id="cta">
+  <div class="cta-content">
+    <div class="cta-text">
+      <span class="cta-label">Prêt à commencer ?</span>
+      <h2 class="cta-title">Transformez vos idées<br>en revenus concrets.</h2>
+      <p class="cta-sub">Rejoignez des centaines d'entrepreneurs qui ont déjà lancé leur business avec Fusion Service Group. Zéro excuses. Tout est là.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="https://wa.me/237691166735" class="btn-dark">💬 WhatsApp maintenant</a>
+      <a href="#contact" class="btn-outline-dark">Envoyer un message</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="temoignages">
+  <div class="testi-header">
+    <div class="section-label reveal">Témoignages</div>
+    <h2 class="section-title reveal reveal-delay-1">Ils ont transformé<br>leur <em>business</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Grâce à la formation importation en ligne, j'ai passé ma première commande depuis la Chine en 2 semaines. Le suivi est vraiment top !</p>
+      <div class="testi-author">
+        <div class="testi-avatar">AK</div>
+        <div>
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-name">Arnaud K.</div>
+          <div class="testi-role">Revendeur, Douala</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">J'ai lancé ma boutique en ligne après la formation E-Commerce 3.0. En 3 mois, j'avais déjà rentabilisé l'investissement. Incroyable !</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--cyan)">FM</div>
+        <div>
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-name">Fatou M.</div>
+          <div class="testi-role">E-commerçante, Yaoundé</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Le service marketing a multiplié mes ventes par 3 en un mois. Leurs campagnes Facebook sont vraiment efficaces et bien ciblées.</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--blue)">JB</div>
+        <div>
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-name">Jean-Baptiste O.</div>
+          <div class="testi-role">Commerçant, Bafoussam</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PARTENAIRES -->
+<section id="partenaires">
+  <div class="partners-header">
+    <div class="section-label" style="justify-content:center;">Nos Partenaires</div>
+  </div>
+  <div class="partners-row">
+    <div class="partner-badge">Business Importation</div>
+    <div class="partner-badge">GiselPay</div>
+    <div class="partner-badge">Sajor Company</div>
+    <div class="partner-badge">MConsult Agency</div>
+    <div class="partner-badge">CF Agency</div>
+    <div class="partner-badge">La Maison du Business</div>
+    <div class="partner-badge">Queen SMS</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="section-label reveal">Contact</div>
+      <h2 class="section-title reveal reveal-delay-1">Parlons de votre<br><em>projet</em></h2>
+      <p class="section-desc reveal reveal-delay-2" style="margin-bottom:50px;">Que vous vouliez vous former, importer ou digitaliser votre business, on a une solution pour vous.</p>
+      <div class="contact-item reveal reveal-delay-1">
+        <div class="contact-icon">📞</div>
+        <div>
+          <h4>Téléphone & WhatsApp</h4>
+          <a href="tel:+237691166735">+237 691 16 67 35</a><br>
+          <a href="tel:+237672553784">+237 672 553 784</a>
+        </div>
+      </div>
+      <div class="contact-item reveal reveal-delay-2">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <h4>Email</h4>
+          <a href="mailto:Touspreneur01@gmail.com">Touspreneur01@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-item reveal reveal-delay-3">
+        <div class="contact-icon">📍</div>
+        <div>
+          <h4>Adresses</h4>
+          <p>Makepe Bloc L, Douala</p>
+          <p>Bocom Makepe — Rue du Marché Missoke</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" placeholder="Votre prénom" required>
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" placeholder="Votre nom">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email / WhatsApp</label>
+          <input type="text" placeholder="Email ou numéro WhatsApp" required>
+        </div>
+        <div class="form-group">
+          <label>Ce qui vous intéresse</label>
+          <select>
+            <option value="">Choisir un service ou formation</option>
+            <option>Formation Importation</option>
+            <option>Formation Marketing Digital</option>
+            <option>Formation E-Commerce 3.0</option>
+            <option>Formation Community Management</option>
+            <option>Formation Designer Graphique</option>
+            <option>Formation Publicité Facebook/TikTok</option>
+            <option>Importation Chine</option>
+            <option>Importation Nigeria</option>
+            <option>Importation Dubaï</option>
+            <option>Transport Express</option>
+            <option>Agence Marketing</option>
+            <option>Voyage Business</option>
+            <option>Infographie</option>
+            <option>Impôts & Taxes</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message (optionnel)</label>
+          <textarea rows="4" placeholder="Décrivez brièvement votre besoin ou projet..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Envoyer ma demande →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">
+        <div class="logo-icon">FSG</div>
+        Fusion <span>Service</span>
+      </a>
+      <p class="footer-desc">Les services interliés pour vous offrir des solutions complètes, simples et rentables. Votre partenaire pour le digital et le commerce international.</p>
+      <div class="footer-socials">
+        <a href="https://wa.me/237691166735" class="social-btn">📱</a>
+        <a href="#" class="social-btn">f</a>
+        <a href="#" class="social-btn">▶</a>
+        <a href="mailto:Touspreneur01@gmail.com" class="social-btn">✉</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Importation groupée</a></li>
+        <li><a href="#services">Transport Express</a></li>
+        <li><a href="#services">Agence Marketing</a></li>
+        <li><a href="#services">Agence Voyage</a></li>
+        <li><a href="#services">FinTech</a></li>
+        <li><a href="#services">Infographie</a></li>
+        <li><a href="#services">Impôts & Taxes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Formations</h4>
+      <ul>
+        <li><a href="#formations">Importation en ligne</a></li>
+        <li><a href="#formations">Publicité Facebook/TikTok</a></li>
+        <li><a href="#formations">Community Management</a></li>
+        <li><a href="#formations">Marketing Digital</a></li>
+        <li><a href="#formations">Designer Graphique</a></li>
+        <li><a href="#formations">E-Commerce 3.0</a></li>
+        <li><a href="#formations">MA Stratégie</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+237691166735">+237 691 16 67 35</a></li>
+        <li><a href="tel:+237672553784">+237 672 553 784</a></li>
+        <li><a href="mailto:Touspreneur01@gmail.com">Touspreneur01@gmail.com</a></li>
+        <li><a href="#">Makepe Bloc L, Douala</a></li>
+        <li><a href="#">Bocom Makepe — Marché Missoke</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span>Fusion Service Group SARL</span>. Tous droits réservés.</p>
+    <p class="rccm">RCCM: CM-DLA-01-2025-B12-00819 · NIU: M062517808592Y</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/237691166735" class="wa-float" title="WhatsApp">💬</a>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursorFollower');
+  let mx = 0, my = 0, fx = 0, fy = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animateFollower() {
+    fx += (mx - fx) * 0.12;
+    fy += (my - fy) * 0.12;
+    follower.style.left = fx + 'px';
+    follower.style.top = fy + 'px';
+    requestAnimationFrame(animateFollower);
+  }
+  animateFollower();
+  document.querySelectorAll('a, button, .service-card, .formation-card, .why-item, .testi-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      follower.style.width = '56px'; follower.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px'; cursor.style.height = '12px';
+      follower.style.width = '36px'; follower.style.height = '36px';
+    });
+  });
+
+  // NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // MOBILE MENU
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.add('open');
+  });
+  document.getElementById('mobileClose').addEventListener('click', closeMobile);
+  function closeMobile() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  // COUNTER ANIMATION
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-target'));
+    const suffix = target === 100 ? '%' : target === 500 ? '+' : '';
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current) + suffix;
+    }, 25);
+  }
+
+  // REVEAL ON SCROLL
+  const revealEls = document.querySelectorAll('.reveal');
+  const statNums = document.querySelectorAll('.stat-num');
+  let statsAnimated = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  const statsObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !statsAnimated) {
+      statsAnimated = true;
+      statNums.forEach(el => animateCounter(el));
+    }
+  }, { threshold: 0.5 });
+  if (statNums.length) statsObserver.observe(statNums[0].parentElement.parentElement);
+
+  // FORM SUBMIT
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = '✅ Demande envoyée !';
+    btn.style.background = 'var(--cyan)';
+    setTimeout(() => {
+      btn.textContent = 'Envoyer ma demande →';
+      btn.style.background = '';
+    }, 3000);
+  }
+
+  // SMOOTH ANCHORS
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
