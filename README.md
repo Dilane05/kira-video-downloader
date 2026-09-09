@@ -1,23 +1,23 @@
 # Kira Video Downloader
 
-Téléchargeur de vidéos et playlists YouTube basé sur [yt-dlp](https://github.com/yt-dlp/yt-dlp), construit avec Next.js 16 / React 19.
+A YouTube video/playlist downloader built on [yt-dlp](https://github.com/yt-dlp/yt-dlp), with Next.js 16 / React 19. Local, single-user tool — not intended as a multi-tenant deployment.
 
 ![CI](https://github.com/Dilane05/kira-video-downloader/actions/workflows/ci.yml/badge.svg)
 
-## Fonctionnalités
+## Features
 
-- Récupération des métadonnées d'une vidéo ou d'une playlist YouTube (titre, miniature, durée, formats disponibles)
-- Téléchargement avec suivi de progression en temps réel (SSE)
-- Sélection du format (résolution vidéo, audio seul)
-- Fonctionne sans `ffmpeg` : ne propose que des flux progressifs (vidéo+audio dans un seul fichier) si `ffmpeg` est absent, sinon permet le merge haute résolution
+- Fetch metadata for a video or playlist (title, thumbnail, duration, available formats)
+- Download with real-time progress (SSE)
+- Format selection (video resolution, audio-only)
+- Works without `ffmpeg`: only offers progressive streams (video+audio in one file) when `ffmpeg` is absent, otherwise allows high-resolution merging
 
-## Prérequis
+## Requirements
 
-- [Node.js](https://nodejs.org) — version fixée dans [`.nvmrc`](.nvmrc) (`nvm use`)
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) installé sur le système (`brew install yt-dlp`)
-- [ffmpeg](https://ffmpeg.org) *(optionnel)* — permet le merge vidéo/audio haute résolution ; sans lui, seuls les formats progressifs sont proposés
+- [Node.js](https://nodejs.org) — version pinned in [`.nvmrc`](.nvmrc) (`nvm use`)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) installed on the system (`brew install yt-dlp`)
+- [ffmpeg](https://ffmpeg.org) *(optional)* — enables high-resolution video/audio merging; without it, only progressive formats are offered
 
-## Démarrage
+## Getting started
 
 ```bash
 nvm use
@@ -25,28 +25,37 @@ npm install
 npm run dev
 ```
 
-L'application est disponible sur [http://localhost:4210](http://localhost:4210).
+The app is available at [http://localhost:4210](http://localhost:4210).
 
 ## Scripts
 
-| Commande | Rôle |
+| Command | Purpose |
 |---|---|
-| `npm run dev` | Serveur de développement |
-| `npm run build` | Build production |
-| `npm run start` | Serveur production |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run start` | Production server |
 | `npm run lint` | ESLint |
-| `npm run test` | Suite de tests (Vitest) |
-| `npm run test:watch` | Tests en mode watch |
+| `npm run test` | Test suite (Vitest) |
+| `npm run test:watch` | Tests in watch mode |
 
 ## Architecture
 
-- `app/page.tsx` — UI principale (Client Component), tout le téléchargeur
-- `app/api/info` (`GET ?url=`) — métadonnées JSON via `yt-dlp --dump-json`
-- `app/api/download` (`POST {url, formatId}`) — lance yt-dlp, streame la progression en SSE
-- `app/api/file/[id]` (`GET`) — sert le fichier téléchargé puis le supprime
+- `app/page.tsx` — main UI (Client Component), the whole downloader
+- `app/api/info` (`GET ?url=`) — JSON metadata via `yt-dlp --dump-json`
+- `app/api/download` (`POST {url, formatId}`) — runs yt-dlp, streams progress over SSE
+- `app/api/file/[id]` (`GET`) — serves the downloaded file, then deletes it
 
-Le détail complet (dépendances système, conventions de style) est documenté dans [CLAUDE.md](CLAUDE.md).
+Full details (system dependencies, style conventions) are documented in [CLAUDE.md](CLAUDE.md).
 
-## Contribuer
+## Roadmap
 
-Le projet suit un workflow GitFlow (`main` / `develop` / `feature/*` / `release/*` / `hotfix/*`), avec CI obligatoire (lint + test + build) sur les branches protégées. Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails.
+Prioritized by impact vs. effort, staying within the local/personal-tool scope (no multi-user architecture planned):
+
+1. **ffmpeg support** — biggest gain for the least effort: unlocks real 1080p/4K merging and audio extraction. The download route already supports it; it's an install-only step.
+2. **Local download history / queue** — nothing currently persists after a download (the `.ref` file is deleted once the file is served). A simple local JSON store would be enough — no database needed.
+3. **Broader yt-dlp site support** — yt-dlp supports ~1800 sites; the code has no YouTube-specific checks, so extending the UI/docs beyond YouTube is close to free.
+4. **Robustness** — no size/duration limits yet, and orphaned `.ref` files aren't cleaned up if a download fails before the file is fetched.
+
+## Contributing
+
+The project follows a GitFlow workflow (`main` / `develop` / `feature/*` / `release/*` / `hotfix/*`), with mandatory CI (lint + test + build) on protected branches. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
