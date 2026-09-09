@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { execFile } from "child_process";
 import { promisify } from "util";
-import fs from "fs";
+import { binaryAvailable, binaryCommand } from "@/lib/system-binaries";
 
 const execFileAsync = promisify(execFile);
-const YTDLP  = "/opt/homebrew/bin/yt-dlp";
-const FFMPEG_PATHS = ["/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg"];
+const YTDLP = binaryCommand("yt-dlp");
 
-// Détecte si ffmpeg est disponible sur le système
+// Détecte si ffmpeg est disponible sur le système (chemin connu ou PATH)
 function detectFfmpeg(): boolean {
-  return FFMPEG_PATHS.some((p) => {
-    try { return fs.existsSync(p); } catch { return false; }
-  });
+  return binaryAvailable("ffmpeg");
 }
 
 export async function GET(req: NextRequest) {

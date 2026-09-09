@@ -9,13 +9,12 @@ Téléchargeur de vidéos et playlists YouTube basé sur **yt-dlp**, construit a
 ## Commandes
 
 ```bash
-npm run dev      # Serveur de développement (http://localhost:3000)
+npm run dev      # Serveur de développement (http://localhost:4210)
 npm run build    # Build production
 npm run start    # Serveur production
 npm run lint     # ESLint (pas de --fix par défaut)
+npm run test     # Suite de tests (Vitest)
 ```
-
-Pas de suite de tests configurée.
 
 ## Architecture
 
@@ -27,11 +26,11 @@ Pas de suite de tests configurée.
 |---|---|---|
 | `/api/info` | GET `?url=` | `yt-dlp --dump-json --flat-playlist` → métadonnées JSON |
 | `/api/download` | POST `{url, formatId}` | Lance yt-dlp, streame la progression via **SSE** |
-| `/api/file/[id]` | GET | Sert le fichier depuis `/tmp/kira-downloads/`, puis le supprime |
+| `/api/file/[id]` | GET | Sert le fichier depuis `~/Documents/kvd/`, puis le supprime |
 
 ### Dépendances système (non npm)
-- **yt-dlp** : `/opt/homebrew/bin/yt-dlp` (installé via Homebrew)
-- **ffmpeg** : **non disponible** — les formats sélectionnés doivent être des flux progressifs (vidéo+audio dans un seul fichier, sans muxing)
+- **yt-dlp** et **ffmpeg** (optionnel) : résolus au runtime via `lib/system-binaries.ts` — chemins d'installation courants par OS (macOS Homebrew, Linux apt/pip, Windows choco/winget), avec repli sur `PATH`. Ne pas coder de chemin en dur dans les routes API.
+- Si `ffmpeg` est introuvable, seuls les flux progressifs (vidéo+audio dans un seul fichier, sans muxing) sont proposés.
 
 ### Styling
 - Thème dark minimal via CSS custom properties dans `app/globals.css`

@@ -14,8 +14,18 @@ A YouTube video/playlist downloader built on [yt-dlp](https://github.com/yt-dlp/
 ## Requirements
 
 - [Node.js](https://nodejs.org) — version pinned in [`.nvmrc`](.nvmrc) (`nvm use`)
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) installed on the system (`brew install yt-dlp`)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) installed on the system
 - [ffmpeg](https://ffmpeg.org) *(optional)* — enables high-resolution video/audio merging; without it, only progressive formats are offered
+
+Install yt-dlp (and, optionally, ffmpeg) for your OS:
+
+| OS | yt-dlp | ffmpeg |
+|---|---|---|
+| macOS | `brew install yt-dlp` | `brew install ffmpeg` |
+| Ubuntu / Debian | `sudo apt install yt-dlp` (or `pip install --user yt-dlp` for the latest release) | `sudo apt install ffmpeg` |
+| Windows | `winget install yt-dlp` (or `choco install yt-dlp`) | `winget install ffmpeg` (or `choco install ffmpeg`) |
+
+The app looks for both binaries at their common install locations for each OS, falling back to your `PATH` — no manual configuration needed as long as one of the commands above succeeds.
 
 ## Getting started
 
@@ -44,6 +54,7 @@ The app is available at [http://localhost:4210](http://localhost:4210).
 - `app/api/info` (`GET ?url=`) — JSON metadata via `yt-dlp --dump-json`
 - `app/api/download` (`POST {url, formatId}`) — runs yt-dlp, streams progress over SSE
 - `app/api/file/[id]` (`GET`) — serves the downloaded file, then deletes it
+- `lib/system-binaries.ts` — resolves `yt-dlp`/`ffmpeg` across macOS/Linux/Windows install locations, falling back to `PATH`
 
 Full details (system dependencies, style conventions) are documented in [CLAUDE.md](CLAUDE.md).
 

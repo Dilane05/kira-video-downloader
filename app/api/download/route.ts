@@ -4,9 +4,9 @@ import { randomUUID } from "crypto";
 import path from "path";
 import os from "os";
 import fs from "fs";
+import { binaryCommand, resolveBinary, binaryOnPath } from "@/lib/system-binaries";
 
-const YTDLP     = "/opt/homebrew/bin/yt-dlp";
-const FFMPEG_PATHS = ["/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg"];
+const YTDLP     = binaryCommand("yt-dlp");
 const BASE_DIR  = path.join(os.homedir(), "Documents", "kvd");
 
 export const dynamic = "force-dynamic";
@@ -15,10 +15,10 @@ export const runtime = "nodejs";
 const PROGRESS_RE =
   /\[download\]\s+([\d.]+)%\s+of\s+~?([\d.]+\s*\S+)\s+at\s+([\d.]+\s*\S+\/s)\s+ETA\s+([\d:]+)/;
 
-function detectFfmpeg(): string | null {
-  return FFMPEG_PATHS.find((p) => {
-    try { return fs.existsSync(p); } catch { return false; }
-  }) ?? null;
+// Chemin absolu d'ffmpeg si connu (pour --ffmpeg-location), sinon un booléen
+// s'il n'est trouvable que via PATH — auquel cas yt-dlp le résout lui-même.
+function detectFfmpeg(): string | true | null {
+  return resolveBinary("ffmpeg") ?? (binaryOnPath("ffmpeg") || null);
 }
 
 export function sanitizeName(name: string): string {
@@ -62,8 +62,9 @@ export async function POST(req: NextRequest) {
     "-o", outputTemplate,
   ];
 
-  // Si ffmpeg est disponible, on l'indique à yt-dlp
-  if (ffmpegPath) {
+  // Si ffmpeg est à un chemin connu, on l'indique explicitement à yt-dlp ;
+  // s'il n'est trouvable que via PATH (ffmpegPath === true), yt-dlp le résout lui-même.
+  if (typeof ffmpegPath === "string") {
     args.push("--ffmpeg-location", path.dirname(ffmpegPath));
   }
 
