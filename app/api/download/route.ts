@@ -21,7 +21,7 @@ function detectFfmpeg(): string | null {
   }) ?? null;
 }
 
-function sanitizeName(name: string): string {
+export function sanitizeName(name: string): string {
   return name
     .replace(/[/:\\*?"<>|]/g, "-")
     .replace(/\.{2,}/g, ".")

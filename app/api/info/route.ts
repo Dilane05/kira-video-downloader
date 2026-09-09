@@ -121,7 +121,7 @@ function fsize(f: RawFormat): number {
   return f.filesize ?? f.filesize_approx ?? 0;
 }
 
-function buildFormats(raw: RawFormat[], ffmpegAvailable: boolean): Format[] {
+export function buildFormats(raw: RawFormat[], ffmpegAvailable: boolean): Format[] {
   const out: Format[] = [];
   const seenLabel = new Set<string>();
 
