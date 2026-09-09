@@ -27,6 +27,12 @@ npm run build
 
 Les mêmes vérifications tournent en CI (GitHub Actions) et doivent passer avant qu'une PR puisse être mergée.
 
+## Rôles des collaborateurs
+
+`main` et `develop` exigent 1 review approuvée avant merge. GitHub compte comme valide toute approbation venant d'un accès **Write ou supérieur** — il n'existe pas de réglage natif pour restreindre ça à un rôle plus élevé.
+
+Pour que seuls les rôles **Maintain** et **Admin** puissent valider une PR : **n'invitez jamais de collaborateur en rôle "Write"** (ni "Triage"/"Read", qui ne peuvent de toute façon pas merger). Tout collaborateur ajouté au repo doit recevoir directement le rôle `Maintain` ou `Admin` — jamais `Write`.
+
 ## Convention de commit
 
 Préfixe court + description à l'impératif :
