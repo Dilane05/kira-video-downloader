@@ -1,37 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kira Video Downloader
 
-## Getting Started
+Téléchargeur de vidéos et playlists YouTube basé sur [yt-dlp](https://github.com/yt-dlp/yt-dlp), construit avec Next.js 16 / React 19.
 
-First, run the development server:
+![CI](https://github.com/Dilane05/kira-video-downloader/actions/workflows/ci.yml/badge.svg)
+
+## Fonctionnalités
+
+- Récupération des métadonnées d'une vidéo ou d'une playlist YouTube (titre, miniature, durée, formats disponibles)
+- Téléchargement avec suivi de progression en temps réel (SSE)
+- Sélection du format (résolution vidéo, audio seul)
+- Fonctionne sans `ffmpeg` : ne propose que des flux progressifs (vidéo+audio dans un seul fichier) si `ffmpeg` est absent, sinon permet le merge haute résolution
+
+## Prérequis
+
+- [Node.js](https://nodejs.org) — version fixée dans [`.nvmrc`](.nvmrc) (`nvm use`)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) installé sur le système (`brew install yt-dlp`)
+- [ffmpeg](https://ffmpeg.org) *(optionnel)* — permet le merge vidéo/audio haute résolution ; sans lui, seuls les formats progressifs sont proposés
+
+## Démarrage
 
 ```bash
+nvm use
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est disponible sur [http://localhost:4210](http://localhost:4210).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Commande | Rôle |
+|---|---|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build production |
+| `npm run start` | Serveur production |
+| `npm run lint` | ESLint |
+| `npm run test` | Suite de tests (Vitest) |
+| `npm run test:watch` | Tests en mode watch |
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+- `app/page.tsx` — UI principale (Client Component), tout le téléchargeur
+- `app/api/info` (`GET ?url=`) — métadonnées JSON via `yt-dlp --dump-json`
+- `app/api/download` (`POST {url, formatId}`) — lance yt-dlp, streame la progression en SSE
+- `app/api/file/[id]` (`GET`) — sert le fichier téléchargé puis le supprime
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Le détail complet (dépendances système, conventions de style) est documenté dans [CLAUDE.md](CLAUDE.md).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contribuer
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# fsg-site
+Le projet suit un workflow GitFlow (`main` / `develop` / `feature/*` / `release/*` / `hotfix/*`), avec CI obligatoire (lint + test + build) sur les branches protégées. Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails.
