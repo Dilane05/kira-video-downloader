@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd)",
+      "Bash(sed -i '' 's/const dmSans = DM_Sans\\({/const plusJakarta = Plus_Jakarta_Sans\\({/' /Users/dilane/Work/code/freelance/fsg-site/app/fusion-service-group/page.tsx)",
+      "Bash(sed -i '' 's/const syne = Syne\\({/const bricolage = Bricolage_Grotesque\\({/' /Users/dilane/Work/code/freelance/fsg-site/app/fusion-service-group/page.tsx)",
+      "Bash(sed -i '' 's/  weight: \\\\[\"300\", \"400\", \"500\"\\\\],/  weight: [\"300\", \"400\", \"500\", \"600\", \"700\"],/' /Users/dilane/Work/code/freelance/fsg-site/app/fusion-service-group/page.tsx)",
+      "Bash(yt-dlp --version)"
+    ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}

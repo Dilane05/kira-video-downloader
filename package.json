@@ -1,11 +1,11 @@
 {
-  "name": "fsg-site",
+  "name": "kira-video-downloader",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS=--max-old-space-size=2048 next dev -p 4210",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 4210",
     "lint": "eslint"
   },
   "dependencies": {
